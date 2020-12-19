@@ -17,8 +17,7 @@ impl Config {
         let query = args[1].clone();
         let filename = args[2].clone();
 
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
-
+        let case_sensitive = env::var("CASE_SENSITIVE").is_err();
         Ok(Config {
             query,
             filename,
@@ -30,11 +29,19 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.filename)?;
 
-    for line in search(&config.query, &contents) {
+    let results = if config.case_sensitive {
+        search(&config.query, &contents)
+    } else {
+        search_case_insensitive(&config.query, &contents)
+    };
+
+    for line in results {
         println!("{}", line);
     }
+
     Ok(())
 }
+
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results: Vec<&str> = Vec::new();
     for line in contents.lines() {
