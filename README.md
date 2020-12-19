@@ -1,3 +1,3 @@
 # Minigrep
 From the guided exercise in The Rust Book.
-Set using export CASE_INSENSITIVE=1 to enable search_case_insensitive().
+To use case insensitive use in your shell export CASE_INSENSITIVE=1.
